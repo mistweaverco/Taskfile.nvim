@@ -5,6 +5,7 @@ let g:loaded_Taskfile = 1
 
 let s:PluginName = "Taskfile.nvim"
 let s:isVerbose = 0
+let s:taskList = [""]
 
 function! Taskfile#Verbose(enable)
         if a:enable == 1
@@ -16,8 +17,13 @@ endfunction
 
 function! Taskfile#Run(...)
         let task = get(a:, 1, "")
-        let cmd = "./Taskfile " . task
+        let cmd =  s:GetTaskfileAbsoluteFilepath() . " " . task
         call s:ExecExternalCommand(cmd)
+endfunction
+
+function! Taskfile#Reload()
+        " TODO Cache Taskfile tasks and only reload the cache when this
+        " function fires
 endfunction
 
 function! Taskfile#List()
@@ -43,10 +49,21 @@ let s:jobEventCallbacks = {
         \ 'on_exit': function('s:OnJobEventHandler')
 \ }
 
+function! s:taskListCompletion(ArgLead, CmdLine, CursorPos)
+        let s:taskList = s:GetAllTasks()
+        echo s:taskList
+        return filter(s:taskList, 'v:val =~ "^'. a:ArgLead .'"')
+endfunction
+
 function! s:GetAllTasks()
+        let filepath = s:GetTaskfileAbsoluteFilepath()
+        let tasklist = systemlist(filepath)
+        return tasklist
+endfunction
+
+function! s:GetTaskfileAbsoluteFilepath()
         let filepath = getcwd() . "/" . s:GetTaskfileFilename()
-        let str = s:ReadfileAsString(filepath)
-        return str
+        return filepath
 endfunction
 
 function! s:GetTaskfileFilename()
@@ -89,5 +106,5 @@ function! s:GetCurrentFile()
         return expand("%")
 endfunction
 
-command! -nargs=1 Taskfile call Taskfile#Run(<f-args>)
+command! -bang -complete=customlist,s:taskListCompletion -nargs=* Taskfile call Taskfile#Run(<f-args>)
 

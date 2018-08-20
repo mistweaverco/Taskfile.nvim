@@ -11,6 +11,8 @@ You can run the `build` task of the Taskfile like so:
 
 `:Taskfile build` or `:call Taskfile#Run("build")`
 
+You can also autocomplete tasks pressing `<tab>`, or `<tab><tab>`.
+
 ### Cache
 
 The Tasks of the Taskfile are cached, if you modify the Taskfile and add jobs,

@@ -13,6 +13,14 @@ function build {
         echo ""
 }
 
+function listfiles {
+        ls
+}
+
+function listallfiles {
+        ls -la
+}
+
 function tasks {
         compgen -A function
 }
