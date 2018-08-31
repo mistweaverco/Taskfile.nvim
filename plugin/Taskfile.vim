@@ -7,6 +7,14 @@ let s:PluginName = "Taskfile.nvim"
 let s:isVerbose = 0
 let s:taskList = [""]
 
+function! s:FileExists(filepath)
+        if filereadable(a:filepath)
+                return 1
+        else
+                return 0
+        endif
+endfunction
+
 function! Taskfile#Verbose(enable)
         if a:enable == 1
                 let s:isVerbose = 1
@@ -16,9 +24,14 @@ function! Taskfile#Verbose(enable)
 endfunction
 
 function! Taskfile#Run(...)
-        let task = get(a:, 1, "")
-        let cmd =  s:GetTaskfileAbsoluteFilepath() . " " . task
-        call s:ExecExternalCommand(cmd)
+        let filepath = s:GetTaskfileAbsoluteFilepath()
+        if s:FileExists(filepath) == 0
+                echo "No Taskfile found"
+        else 
+                let task = get(a:, 1, "")
+                let cmd =  s:GetTaskfileAbsoluteFilepath() . " " . task
+                call s:ExecExternalCommand(cmd)
+        endif
 endfunction
 
 function! Taskfile#Reload()
@@ -50,8 +63,11 @@ let s:jobEventCallbacks = {
 \ }
 
 function! s:taskListCompletion(ArgLead, CmdLine, CursorPos)
+        let filepath = s:GetTaskfileAbsoluteFilepath()
+        if s:FileExists(filepath) == 0
+                return ""
+        endif
         let s:taskList = s:GetAllTasks()
-        echo s:taskList
         return filter(s:taskList, 'v:val =~ "^'. a:ArgLead .'"')
 endfunction
 
@@ -106,5 +122,5 @@ function! s:GetCurrentFile()
         return expand("%")
 endfunction
 
-command! -bang -complete=customlist,s:taskListCompletion -nargs=* Taskfile call Taskfile#Run(<f-args>)
+command! -bang -complete=customlist,s:taskListCompletion -nargs=* Task call Taskfile#Run(<f-args>)
 
