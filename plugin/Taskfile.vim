@@ -57,7 +57,7 @@ endfunction
 
 function! s:GetAllTasks()
         let filepath = s:GetTaskfileAbsoluteFilepath()
-        let tasklist = systemlist(filepath)
+        let tasklist = systemlist(filepath . " tasks")
         return tasklist
 endfunction
 
