@@ -4,7 +4,7 @@ endif
 let g:loaded_Taskfile = 1
 
 let s:PluginName = "Taskfile.nvim"
-let s:isVerbose = 0
+let s:isVerbose = 1
 let s:taskList = [""]
 
 function! s:FileExists(filepath)
@@ -27,7 +27,7 @@ function! Taskfile#Run(...)
         let filepath = s:GetTaskfileAbsoluteFilepath()
         if s:FileExists(filepath) == 0
                 echo "No Taskfile found"
-        else 
+        else
                 let task = get(a:, 1, "")
                 let cmd =  s:GetTaskfileAbsoluteFilepath() . " " . task
                 call s:ExecExternalCommand(cmd)
@@ -45,6 +45,19 @@ function! Taskfile#List()
         call s:ExecExternalCommand(cmd)
 endfunction
 
+function! s:OnTermEventHandler(job_id, data, event) dict
+        if a:event == 'stdout'
+                " Do nothing
+        elseif a:event == 'stderr'
+                " Do nothing
+        else
+                if a:data == 0
+                        sleep 2000m
+                        close
+                endif
+        endif
+endfunction
+
 function! s:OnJobEventHandler(job_id, data, event) dict
         if a:event == 'stdout'
                 let str = self.shell.' stdout: '.join(a:data)
@@ -55,6 +68,12 @@ function! s:OnJobEventHandler(job_id, data, event) dict
         endif
         echom str
 endfunction
+
+let s:termEventCallbacks = {
+        \ 'on_stdout': function('s:OnTermEventHandler'),
+        \ 'on_stderr': function('s:OnTermEventHandler'),
+        \ 'on_exit': function('s:OnTermEventHandler')
+\ }
 
 let s:jobEventCallbacks = {
         \ 'on_stdout': function('s:OnJobEventHandler'),
@@ -91,13 +110,13 @@ function! s:ExecExternalCommand(command)
                 if s:isVerbose == 0
                         call jobstart(["bash", "-c", a:command])
                 else
-                        new | call termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:jobEventCallbacks))
+                        new | call termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:termEventCallbacks))
                 endif
         elseif v:version >= 800
                 if s:isVerbose == 0
                         call job_start("bash -c " . a:command)
                 else
-                        new termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:jobEventCallbacks))
+                        new termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:termEventCallbacks))
                 endif
         else
                 if s:isVerbose == 1
