@@ -6,6 +6,7 @@ let g:loaded_Taskfile = 1
 let s:PluginName = "Taskfile.nvim"
 let s:isVerbose = 1
 let s:taskList = [""]
+let s:TaskfileWindow = 0
 
 function! s:FileExists(filepath)
         if filereadable(a:filepath)
@@ -47,14 +48,13 @@ endfunction
 
 function! s:OnTermEventHandler(job_id, data, event) dict
         if a:event == 'stdout'
-                " Do nothing
+                " do nothing
         elseif a:event == 'stderr'
-                " Do nothing
+                " do nothing
+        elseif a:data == 0
+                execute s:TaskfileWindow . "windo startinsert!"
         else
-                if a:data == 0
-                        sleep 2000m
-                        close
-                endif
+                " do nothing
         endif
 endfunction
 
@@ -110,7 +110,9 @@ function! s:ExecExternalCommand(command)
                 if s:isVerbose == 0
                         call jobstart(["bash", "-c", a:command])
                 else
-                        new | call termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:termEventCallbacks))
+                        botright new | call termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:termEventCallbacks))
+                        let s:TaskfileWindow = winnr()
+                        execute "normal! G"
                 endif
         elseif v:version >= 800
                 if s:isVerbose == 0
