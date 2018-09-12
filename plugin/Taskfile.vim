@@ -110,9 +110,11 @@ function! s:ExecExternalCommand(command)
                 if s:isVerbose == 0
                         call jobstart(["bash", "-c", a:command])
                 else
+                        let winnr = winnr()
                         botright new | call termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:termEventCallbacks))
                         let s:TaskfileWindow = winnr()
                         execute "normal! G"
+                        execute winnr . "wincmd w"
                 endif
         elseif v:version >= 800
                 if s:isVerbose == 0
