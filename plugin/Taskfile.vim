@@ -50,11 +50,11 @@ function! s:OnTermEventHandler(job_id, data, event) dict
         if a:event == 'stdout'
                 " do nothing
         elseif a:event == 'stderr'
-                " do nothing
-        elseif a:data == 0
                 execute s:TaskfileWindow . "windo startinsert!"
-        else
+        elseif a:data == 0
                 " do nothing
+        else
+                execute s:TaskfileWindow . "windo startinsert!"
         endif
 endfunction
 
@@ -92,7 +92,7 @@ endfunction
 
 function! s:GetAllTasks()
         let filepath = s:GetTaskfileAbsoluteFilepath()
-        let tasklist = systemlist(filepath . " tasks")
+        let tasklist = systemlist(filepath . " __show_tasks")
         return tasklist
 endfunction
 

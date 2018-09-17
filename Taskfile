@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# This task needs to left as it is
+# This is for external plugins and programs to query the available tasks
+function __show_tasks {
+        compgen -A function | grep -v "^_"
+}
+
 # Helper functions start with _ and are invisible to bash auto completion.
 function _get_random_number {
         local min=$1
@@ -32,19 +38,13 @@ function build-all {
 function help {
         echo "$0 <task> <args>"
         echo "Tasks:"
-        tasks | cat -n
-}
-
-# This task needs to left as it is
-# This is for external plugins and programs to query the available tasks
-function tasks {
-        compgen -A function | grep -v "^_"
+        __show_tasks | cat -n
 }
 
 # This is a wrapper for what should be executed, when no args are passed to the
 # Taskfile
 function default {
-        tasks
+        __show_tasks
 }
 
 ${@:-default}
