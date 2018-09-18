@@ -5,13 +5,21 @@ License: MIT License (see |license|)
 
 INTRODUCTION                                    *Taskfile*
 
-This plugin's main purpose is to upload every file that you save to a remote
-location. This can be defined on a per-project-basis via a configuration file
-(`.AutoRemoteSync.json`).
+This plugin's main purpose is run tasks of the Taskfile runner.
+See https://git.superevilmegaco.com/bash/Taskfile for more information.
 
 COMMANDS                                        *Taskfile-commands*
 
-:Taskfile
+Task						      *:Task*
+        
+        Run tasks defined in the Taskfile.
+        `:Task <tab><tab>`
+
+TaskVerbose                                           *:TaskVerbose*
+        
+        After setting verbose mode to 1 each task is executed in a
+        Vim term.
+        `:TaskVerbose 1|0`
 
 MAPPINGS                                        *Taskfile-mappings*
 
@@ -19,14 +27,15 @@ There are no mappings registered by the plugin.
 You need to map it according to your preference.
 
                                                 *Taskfile#Run()*
-Uploads the file opened in the current buffer when no argument is passed.
-You can pass the filepath relative to the current working directory,
-if you want to upload a different file manually.
+Runs the task passed as argument to the function.
 
-                                                *Taskfile#Reload()*
-Downloads the file opened in the current buffer when no argument is passed.
-You can pass the filepath relative to the current working directory,
-if you want to download a different file manually.
+                                                *Taskfile#Verbose()*
+Sets output to verbose. Each task is executed in a Vim term.
+`:call Taskfile#Verbose(1)`
+
+To disable verbose mode, just call the function with 0.
+`:call Taskfile#Verbose(0)`
+
 
 ABOUT                                           *Taskfile-about*
 
