@@ -13,14 +13,12 @@ You can run the `build` task of the Taskfile like so:
 
 You can also autocomplete tasks pressing `<tab>`, or `<tab><tab>`.
 
-### Cache
+### Verbose
 
-The Tasks of the Taskfile are cached, if you modify the Taskfile and add jobs,
-you need to reload the Taskfile like so:
+If you like to see the output of the tasks, you can set the plugin to be more
+verbose with `TaskVerbose 1`. This will spawn a term for every task executed.
 
-```
-:call Taskfile#Reload()<CR>
-```
+If you want to disable the verbosity again, simply run `TaskVerbose 0`.
 
 [Taskfile]: https://git.superevilmegaco.com/bash/Taskfile
 
