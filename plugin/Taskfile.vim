@@ -4,7 +4,7 @@ endif
 let g:loaded_Taskfile = 1
 
 let s:PluginName = "Taskfile.nvim"
-let s:isVerbose = 1
+let s:isVerbose = 0
 let s:taskList = [""]
 let s:TaskfileWindow = 0
 
@@ -52,7 +52,7 @@ function! s:OnTermEventHandler(job_id, data, event) dict
         elseif a:event == 'stderr'
                 execute s:TaskfileWindow . "windo startinsert!"
         elseif a:data == 0
-                " do nothing
+                execute s:TaskfileWindow . "windo startinsert!"
         else
                 execute s:TaskfileWindow . "windo startinsert!"
         endif
@@ -146,4 +146,5 @@ function! s:GetCurrentFile()
 endfunction
 
 command! -bang -complete=customlist,s:taskListCompletion -nargs=* Task call Taskfile#Run(<f-args>)
+command! -nargs=1 TaskVerbose call Taskfile#Verbose(<f-args>)
 
