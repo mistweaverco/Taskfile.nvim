@@ -4,7 +4,6 @@ endif
 let g:loaded_Taskfile = 1
 
 let s:PluginName = "Taskfile.nvim"
-let s:isVerbose = 0
 let s:taskList = [""]
 let s:TaskfileWindow = 0
 
@@ -13,14 +12,6 @@ function! s:FileExists(filepath)
                 return 1
         else
                 return 0
-        endif
-endfunction
-
-function! Taskfile#Verbose(enable)
-        if a:enable == 1
-                let s:isVerbose = 1
-        else
-                let s:isVerbose = 0
         endif
 endfunction
 
@@ -107,26 +98,22 @@ endfunction
 
 function! s:ExecExternalCommand(command)
         if has("nvim") == 1
-                if s:isVerbose == 0
+                if exists("g:TaskfileAsynchronous")
                         call jobstart(["bash", "-c", a:command])
                 else
-                        let winnr = winnr()
-                        botright new | call termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:termEventCallbacks))
-                        let s:TaskfileWindow = winnr()
-                        execute "normal! G"
-                        execute winnr . "wincmd w"
+                        execute "!" . a:command
                 endif
         elseif v:version >= 800
-                if s:isVerbose == 0
+                if exists("g:TaskfileAsynchronous")
                         call job_start("bash -c " . a:command)
                 else
-                        new termopen(["bash", "-c", a:command], extend({"shell": s:PluginName}, s:termEventCallbacks))
+                        execute "!" . a:command
                 endif
         else
-                if s:isVerbose == 1
-                        execute "!" . a:command
-                else
+                if exists("g:TaskfileAsynchronous")
                         silent execute "!" . a:command
+                else
+                        execute "!" . a:command
                 endif
         endif
 endfunction
@@ -146,5 +133,4 @@ function! s:GetCurrentFile()
 endfunction
 
 command! -bang -complete=customlist,s:taskListCompletion -nargs=* Task call Taskfile#Run(<f-args>)
-command! -nargs=1 TaskVerbose call Taskfile#Verbose(<f-args>)
 

@@ -15,27 +15,14 @@ Task						      *:Task*
         Run tasks defined in the Taskfile.
         `:Task <tab><tab>`
 
-TaskVerbose                                           *:TaskVerbose*
-        
-        After setting verbose mode to 1 each task is executed in a
-        Vim term.
-        `:TaskVerbose 1|0`
-
 MAPPINGS                                        *Taskfile-mappings*
 
 There are no mappings registered by the plugin.
 You need to map it according to your preference.
 
                                                 *Taskfile#Run()*
+
 Runs the task passed as argument to the function.
-
-                                                *Taskfile#Verbose()*
-Sets output to verbose. Each task is executed in a Vim term.
-`:call Taskfile#Verbose(1)`
-
-To disable verbose mode, just call the function with 0.
-`:call Taskfile#Verbose(0)`
-
 
 ABOUT                                           *Taskfile-about*
 
