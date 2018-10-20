@@ -13,12 +13,11 @@ You can run the `build` task of the Taskfile like so:
 
 You can also autocomplete tasks pressing `<tab>`, or `<tab><tab>`.
 
-### Verbose
+### Asynchronous
 
-If you like to see the output of the tasks, you can set the plugin to be more
-verbose with `TaskVerbose 1`. This will spawn a term for every task executed.
-
-If you want to disable the verbosity again, simply run `TaskVerbose 0`.
+Taskfile tasks are run synchronous by default.
+You can set `g:TaskfileAsynchronous=1` in your `nvim/init.vim`/`.vimrc`
+to enable asynchronous mode.
 
 [Taskfile]: https://git.superevilmegaco.com/bash/Taskfile
 
